@@ -1,0 +1,82 @@
+#!/bin/bash
+
+main () {
+	in_dir=$1; shift
+	out_dir=$1; shift
+	final_path=$1; shift
+	args="$@"
+	is_empty $final_path && {
+		explain
+		exit 1
+	}
+	compile_all $in_dir $out_dir
+	link_to $final_path $out_dir
+	return
+	open $final_path $args
+}
+
+compile_all () {
+	in_dir=$1; shift
+	out_dir=$1
+	in_names=$(get_names_with_ext c $in_dir)
+	show "compiling '$(eval echo $in_names)' from '$in_dir' to '$out_dir'..."
+	for in_name in $in_names; {
+		out_name=$(change_ext_to o $in_name)
+		compile $in_dir/$in_name $out_dir/$out_name
+	}
+}
+
+compile () {
+	in_path=$1; shift
+	out_path=$1
+	gcc -c -Wall -g $in_path -o $out_path
+	is_success=$?
+	! (exit $is_success) && {
+		explain
+		exit 1
+	}
+}
+
+explain () {
+cat << "EOF"
+Usage: open [in_dir] [out_dir] [final_path] [args...]
+
+	in_dir
+		The directory of c files
+	out_dir
+		The directory of o files
+	final_path
+		The path to link the o files to
+EOF
+}
+
+get_names_with_ext () {
+	ext=$1; shift
+	dir=$1
+	ls $dir | tr " " "\n" | sed -r '{
+		/\.'"$ext"'$/!d
+	}'
+}
+
+change_ext_to () {
+	ext=$1; shift
+	name=$1
+	echo $name | sed -r '{
+		s/\.[^./]*$/.'"$ext"'/
+	}'
+}
+
+show () {
+	str="$@"
+	fmt="\e[92m"
+	noc="\e[m"
+	echo -e "$fmt$str$noc"
+}
+
+is_empty () {
+	! [ "$@" ] && {
+		return 0
+	}
+}
+
+main "$@"
