@@ -86,7 +86,7 @@ exclude_unchanged () {
 	dir=$1; shift
 	exclude_dir=$1; shift
 	prev_dir=$1
-	names=$(get_names_with_ext c $in_dir)
+	names=$(get_names_with_ext c $dir)
 	show "getting unchanged from '$names'..."
 	unchanged_names=$(get_unchanged_from $dir $prev_dir)
 	show "updating previous '$names'..."
@@ -99,6 +99,17 @@ exclude_unchanged () {
 		exclude_name=$(change_ext_to exclude $name)
 		mv $dir/$name $exclude_dir/$exclude_name
 	}
+}
+
+ensure_dirs_exist () {
+	paths="$@"
+	dirs=$(echo $paths | sed -r '{
+		s/ +/\n/g
+	}' | sed -r '{
+		s/\/.*$/\//g
+	}')
+	show "ensuring '$(eval echo $dirs)' exist..."
+	mkdir -p $dirs
 }
 
 get_unchanged_from () {
@@ -121,17 +132,6 @@ get_diff_of () {
 	path=$1; shift
 	diff_path=$1
 	echo $(diff --new-file $path $diff_path)
-}
-
-ensure_dirs_exist () {
-	paths="$@"
-	dirs=$(echo $paths | sed -r '{
-		s/ +/\n/g
-	}' | sed -r '{
-		s/\/.*$/\//g
-	}')
-	show "ensuring '$(eval echo $dirs)' exist..."
-	mkdir -p $dirs
 }
 
 explain () {
