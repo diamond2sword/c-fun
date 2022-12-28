@@ -5,8 +5,9 @@ main () {
 }
 
 run_here () {
+	dir=$1; shift
 	final_name=$1
-	run . . . . ./$final_name
+	run $dir $dir $dir $dir $dir/$final_name
 }
 
 run () {
