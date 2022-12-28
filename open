@@ -38,32 +38,10 @@ open () {
 
 link_to () {
 	final_path=$1; shift
-	out_dir=$1
-	out_paths=$(get_paths_with_ext o $out_dir)
-	show "linking '$(eval echo $out_paths)' to '$final_path'..."
-	gcc -Wall -g $out_paths -o $final_path
-	succeed=$?
-	! (exit $succeed) && {
-		explain
-		exit 3
-	}
-}
-
-compile_all () {
-	in_dir=$1; shift
-	out_dir=$1
-	in_names=$(get_names_with_ext c $in_dir)
-	show "compiling '$(eval echo $in_names)' from '$in_dir' to '$out_dir'..."
-	for in_name in $in_names; {
-		out_name=$(change_ext_to o $in_name)
-		compile $in_dir/$in_name $out_dir/$out_name
-	}
-}
-
-compile () {
-	in_path=$1; shift
-	out_path=$1
-	gcc -c -Wall -g $in_path -o $out_path
+	dir=$1
+	paths=$(get_paths_with_ext o $dir)
+	show "linking '$(eval echo $paths)' to '$final_path'..."
+	gcc -Wall -g $paths -o $final_path
 	succeed=$?
 	! (exit $succeed) && {
 		explain
@@ -71,11 +49,33 @@ compile () {
 	}
 }
 
+compile_all () {
+	dir=$1; shift
+	out_dir=$1
+	names=$(get_names_with_ext c $dir)
+	show "compiling '$(eval echo $names)'..."
+	for name in $names; {
+		out_name=$(change_ext_to o $name)
+		compile $dir/$name $out_dir/$out_name
+	}
+}
+
+compile () {
+	path=$1; shift
+	out_path=$1
+	gcc -c -Wall -g $path -o $out_path
+	succeed=$?
+	! (exit $succeed) && {
+		explain
+		exit 3
+	}
+}
+
 include_unchanged () {
 	exclude_dir=$1; shift
 	dir=$1
 	exclude_names=$(get_names_with_ext exclude $exclude_dir)
-	show "including '$exclude_names'..."
+	show "including '$exclude_names' to '$dir'..."
 	for exclude_name in $exclude_names; {
 		name=$(change_ext_to c $exclude_name)
 		mv $exclude_dir/$exclude_name $dir/$name
@@ -94,7 +94,7 @@ exclude_unchanged () {
 		prev_name=$(change_ext_to prev $name)
 		cp -f $dir/$name $prev_dir/$prev_name
 	}
-	show "excluding '$unchanged_names'..."
+	show "excluding '$unchanged_names' from '$dir'..."
 	for name in $unchanged_names; {
 		exclude_name=$(change_ext_to exclude $name)
 		mv $dir/$name $exclude_dir/$exclude_name
@@ -115,7 +115,7 @@ ensure_dirs_exist () {
 get_unchanged_from () {
 	dir=$1; shift
 	prev_dir=$1
-	names=$(get_names_with_ext c $in_dir)
+	names=$(get_names_with_ext c $dir)
 	unchanged_names=
 	for name in $names; {
 		prev_name=$(change_ext_to prev $name)
