@@ -6,8 +6,9 @@ main () {
 
 run_here () {
 	dir=$1; shift
-	final_name=$1
-	run $dir $dir $dir $dir $dir/$final_name
+	final_name=$1; shift
+	args="$@"
+	run $dir $dir/out $dir/prev $dir $dir/$final_name "$args"
 }
 
 run () {
@@ -26,6 +27,7 @@ run () {
 	compile_all $in_dir $out_dir
 	include_unchanged $exclude_dir $in_dir
 	link_to $final_path $out_dir
+	create_prev_files_of $in_dir $prev_dir
 	open $final_path $args
 }
 
@@ -33,7 +35,18 @@ open () {
 	path=$1; shift
 	args="$@"
 	show "opening '$path' with '$args'..."
-	$path $args
+	eval $path $args
+}
+
+create_prev_files_of () {
+	dir=$1; shift
+	prev_dir=$1
+	names=$(get_names_with_ext c $dir)
+	show "creating prev files of '$names'..."
+	for name in $names; {
+		prev_name=$(change_ext_to prev $name)
+		cp -f $dir/$name $prev_dir/$prev_name
+	}
 }
 
 link_to () {
@@ -89,11 +102,6 @@ exclude_unchanged () {
 	names=$(get_names_with_ext c $dir)
 	show "getting unchanged from '$names'..."
 	unchanged_names=$(get_unchanged_from $dir $prev_dir)
-	show "updating previous '$names'..."
-	for name in $names; {
-		prev_name=$(change_ext_to prev $name)
-		cp -f $dir/$name $prev_dir/$prev_name
-	}
 	show "excluding '$unchanged_names' from '$dir'..."
 	for name in $unchanged_names; {
 		exclude_name=$(change_ext_to exclude $name)
@@ -106,7 +114,7 @@ ensure_dirs_exist () {
 	dirs=$(echo $paths | sed -r '{
 		s/ +/\n/g
 	}' | sed -r '{
-		s/\/.*$/\//g
+		s/\/[^/]*$/\//g
 	}')
 	show "ensuring '$(eval echo $dirs)' exist..."
 	mkdir -p $dirs

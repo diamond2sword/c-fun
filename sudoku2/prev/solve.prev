@@ -1,0 +1,49 @@
+int solve(char* puzzle) {
+	printf("Am I solving %s?\n", puzzle);
+	run();
+	return 1;
+}
+
+int run() {
+	char UNUSED[9*9*9][1];
+	char PUZZLE[9*9];
+	say("creating array of 'UNUSED' marks...");
+	for (int i=0; i<9*9; i+=9) {
+		cpyStrTo(UNUSED[i*9], "123456789");
+	}
+	printf("%s\n", UNUSED);
+	return;
+}
+
+int cpyStrTo(char* arr, const char* str) {
+	memcpy(arr, str, strlen(str));
+	return 1;
+}
+
+int say(const char* str) {
+	char* fmt = "\e[0;93m";
+	char* varFmt = "\e[1;96m";
+	char* noc = "\e[m";
+	int isFirst = 1;
+	printf("%s", fmt);
+	for (int i=0; i<strlen(str); i++) {
+		if (str[i] != '\'') {
+			printf("%c", str[i]);
+			continue;
+		}
+		if (isFirst) {
+			printf("%c%s%s", str[i], noc, varFmt);
+			isFirst = !isFirst;
+			continue;
+		}
+		if (!isFirst) {
+			printf("%s%s%c", noc, fmt, str[i]);
+			isFirst = !isFirst;
+			continue;
+		}
+	}
+	printf("%s\n", noc);
+	return 1;
+}
+
+#include <string.h>
