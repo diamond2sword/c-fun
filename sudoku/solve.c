@@ -67,9 +67,9 @@ int isColOkay(int* intPuzzle, int zeroIndex) {
 }
 
 int isBoxOkay(int* intPuzzle, int zeroIndex) {
-	int row = floor(zeroIndex/9);
-	int boxRow = floor(row/3);
-	int boxCol = floor(zeroIndex%9/3);
+	int row = floor(zeroIndex/9.0f);
+	int boxRow = floor(row/3.0f);
+	int boxCol = floor(zeroIndex%9/3.0f);
 	int sum = 0;
 	for (int i=0; i<3; i++)
 		for (int j=0; j<3; j++) {

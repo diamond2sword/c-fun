@@ -1,0 +1,104 @@
+#!/bin/bash
+
+get_open_config () {
+	cat << EOF | with_common_indent 0
+		TARGET="main"
+		EXECUTABLE_EXT="c"
+		CMAKE_MIN_VER="3.11"
+		CMAKE_LANGUAGE="C"
+		CMAKE_LANGUAGE_VER="1.0.0"
+		IS_FTXUI=false
+		FTXUI_VER=5
+EOF
+}
+
+
+main () {
+	local dir="$1"
+	if [[ ! -f "$dir/open_config" ]]; then
+		get_open_config > "$dir/open_config"
+	fi
+	source "$dir/open_config" || exit 1
+	local target="$TARGET"
+	if (! ($IS_FTXUI)); then
+		echo "Info: Not using FTXui"	
+	fi
+
+	get_cmake_lists_txt_str "$dir" "$target" > "$dir/CMakeLists.txt"
+	
+	mkdir -p "$dir/build"
+	cd "$dir/build"
+	cmake ..
+	make
+	./"$target"
+}
+
+get_cmake_lists_txt_str () {
+local dir="$1"
+local target="$2"
+cat << EOF | with_common_indent 0
+		cmake_minimum_required (VERSION $CMAKE_MIN_VER)
+		project($target LANGUAGES $CMAKE_LANGUAGE VERSION $CMAKE_LANGUAGE_VER)
+		$($IS_FTXUI && echo "find_package(ftxui $FTXUI_VER REQUIRED)")
+		add_executable($target
+$({
+		ls "$dir" | 
+		tr ' ' '\n' |
+		sed "/\\.$EXECUTABLE_EXT$/!d" |
+		with_common_indent 3
+})
+		)
+$({
+		$IS_FTXUI && cat << EOF2 | with_common_indent 2
+			target_link_libraries($target
+				PRIVATE ftxui::screen
+				PRIVATE ftxui::dom
+				PRIVATE ftxui::component
+			)
+EOF2
+})
+EOF
+}
+
+with_common_indent () {
+	local num_indents="$1"
+	local str
+	local str_tab_list
+	str="$(cat)"
+	str_tab_list=($(
+		echo "$str" |
+		sed -E 's/^(\t*).*/\1/g' |
+		tr '\t' '-'
+	))
+	local least_num_indents=${#str_tab_list[1]}
+	for str_tab in "${str_tab_list[@]}"; do
+		least_num_indents=$(math_min ${#str_tab} $least_num_indents)
+	done
+
+	cur_common_indent=$(
+		for i in $(seq 1 $least_num_indents); do
+			echo -n '\t'
+		done
+	)
+
+	new_common_indent=$(
+		for i in $(seq 1 $num_indents); do
+			echo -n '\t'
+		done
+	)
+
+	echo "$str" |
+		sed "s/^$cur_common_indent/$new_common_indent/g"
+}
+
+math_min () {
+	local num1=$1
+	local num2=$2
+	if ((num1 < num2)); then
+		echo $num1
+	else
+		echo $num2
+	fi
+}
+
+main "$@"

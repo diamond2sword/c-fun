@@ -1,0 +1,1 @@
+/data/data/com.termux/files/usr/bin/cc -O2 -g -DNDEBUG CMakeFiles/main.dir/hello.c.o CMakeFiles/main.dir/main.c.o -o main
