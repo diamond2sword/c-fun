@@ -1,1 +1,1 @@
-/data/data/com.termux/files/usr/bin/cc -O2 -g -DNDEBUG CMakeFiles/main.dir/main.c.o CMakeFiles/main.dir/solve.c.o CMakeFiles/main.dir/solve2.c.o -o main
+/data/data/com.termux/files/usr/bin/cc -O2 -g -DNDEBUG CMakeFiles/main.dir/main.c.o -o main

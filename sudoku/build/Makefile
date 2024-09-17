@@ -153,54 +153,6 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.c.s
 .PHONY : main.c.s
 
-solve.o: solve.c.o
-.PHONY : solve.o
-
-# target to build an object file
-solve.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve.c.o
-.PHONY : solve.c.o
-
-solve.i: solve.c.i
-.PHONY : solve.i
-
-# target to preprocess a source file
-solve.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve.c.i
-.PHONY : solve.c.i
-
-solve.s: solve.c.s
-.PHONY : solve.s
-
-# target to generate assembly for a file
-solve.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve.c.s
-.PHONY : solve.c.s
-
-solve2.o: solve2.c.o
-.PHONY : solve2.o
-
-# target to build an object file
-solve2.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve2.c.o
-.PHONY : solve2.c.o
-
-solve2.i: solve2.c.i
-.PHONY : solve2.i
-
-# target to preprocess a source file
-solve2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve2.c.i
-.PHONY : solve2.c.i
-
-solve2.s: solve2.c.s
-.PHONY : solve2.s
-
-# target to generate assembly for a file
-solve2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/solve2.c.s
-.PHONY : solve2.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -213,12 +165,6 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... solve.o"
-	@echo "... solve.i"
-	@echo "... solve.s"
-	@echo "... solve2.o"
-	@echo "... solve2.i"
-	@echo "... solve2.s"
 .PHONY : help
 
 

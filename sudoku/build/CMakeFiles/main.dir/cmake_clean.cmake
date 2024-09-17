@@ -1,10 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/main.dir/main.c.o"
   "CMakeFiles/main.dir/main.c.o.d"
-  "CMakeFiles/main.dir/solve.c.o"
-  "CMakeFiles/main.dir/solve.c.o.d"
-  "CMakeFiles/main.dir/solve2.c.o"
-  "CMakeFiles/main.dir/solve2.c.o.d"
   "main"
   "main.pdb"
 )

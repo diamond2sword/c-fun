@@ -9,8 +9,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/data/data/com.termux/files/home/c-fun/sudoku/main.c" "CMakeFiles/main.dir/main.c.o" "gcc" "CMakeFiles/main.dir/main.c.o.d"
-  "/data/data/com.termux/files/home/c-fun/sudoku/solve.c" "CMakeFiles/main.dir/solve.c.o" "gcc" "CMakeFiles/main.dir/solve.c.o.d"
-  "/data/data/com.termux/files/home/c-fun/sudoku/solve2.c" "CMakeFiles/main.dir/solve2.c.o" "gcc" "CMakeFiles/main.dir/solve2.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
